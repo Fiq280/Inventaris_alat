@@ -1,0 +1,49 @@
+:root {
+  --sky: #4aa3df;
+  --sky-dark: #3a8fc9;
+  --sky-soft: #eaf4fb;
+  --off-white: #f5f9fc;
+}
+
+body {
+  background: var(--off-white);
+}
+
+/* Navbar */
+.navbar-sky {
+  background: var(--sky);
+}
+
+/* Tombol utama dan badge berwarna biru langit */
+.btn-primary {
+  --bs-btn-bg: var(--sky);
+  --bs-btn-border-color: var(--sky);
+  --bs-btn-hover-bg: var(--sky-dark);
+  --bs-btn-hover-border-color: var(--sky-dark);
+  --bs-btn-active-bg: var(--sky-dark);
+  --bs-btn-active-border-color: var(--sky-dark);
+}
+.text-bg-primary {
+  background-color: var(--sky) !important;
+}
+
+/* Kartu dan tabel */
+.card {
+  border: 0;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(74, 163, 223, 0.12);
+}
+.table thead th {
+  background: var(--sky-soft);
+  color: #2b5f84;
+}
+
+/* Halaman login */
+body.halaman-login {
+  background: var(--sky-soft);
+}
+.kartu-login {
+  max-width: 400px;
+  margin: 10vh auto;
+  border-radius: 16px;
+}
