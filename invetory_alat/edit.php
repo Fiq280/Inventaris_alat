@@ -60,45 +60,90 @@ if (isset($_POST['update'])) {
 include "header.php";
 ?>
 
-<h3 class="mb-3">Edit Alat #ALT-<?= str_pad($id, 4, '0', STR_PAD_LEFT) ?></h3>
+<!-- START: Page Header Banner -->
+<div class="page-header d-flex flex-wrap justify-content-between align-items-center mb-4">
+  <div>
+    <h1 class="page-title">Edit Alat Medis</h1>
+    <p class="page-subtitle text-muted">Perbarui informasi spesifikasi atau lokasi alat #ALT-<?= str_pad($id, 4, '0', STR_PAD_LEFT) ?>.</p>
+  </div>
+  <nav aria-label="breadcrumb">
+    <ol class="breadcrumb mb-0">
+      <li class="breadcrumb-item"><a href="index.php" class="text-decoration-none">Dashboard</a></li>
+      <li class="breadcrumb-item active text-main" aria-current="page">Edit Alat</li>
+    </ol>
+  </nav>
+</div>
+<!-- END: Page Header Banner -->
 
-<?php foreach ($error as $e): ?>
-  <div class="alert alert-danger py-2"><?= htmlspecialchars($e) ?></div>
-<?php endforeach; ?>
+<?php if (!empty($error)): ?>
+  <div class="alert-custom alert-custom-danger mb-4">
+    <i class="bi bi-exclamation-triangle-fill alert-custom-icon"></i>
+    <div class="alert-custom-content">
+      <strong>Terjadi Kesalahan:</strong>
+      <ul class="mb-0 mt-1 ps-3">
+        <?php foreach ($error as $e): ?>
+          <li><?= htmlspecialchars($e) ?></li>
+        <?php endforeach; ?>
+      </ul>
+    </div>
+    <button class="alert-custom-close" type="button" aria-label="Tutup" onclick="this.parentElement.remove();">
+      <i class="bi bi-x-lg"></i>
+    </button>
+  </div>
+<?php endif; ?>
 
-<div class="card" style="max-width:520px">
-  <div class="card-body">
-    <form method="POST">
-      <input type="hidden" name="csrf" value="<?= csrf_token() ?>">
-
-      <div class="mb-3">
-        <label class="form-label">Nama Alat</label>
-        <input type="text" name="nama_alat" class="form-control"
-               value="<?= htmlspecialchars($nama) ?>" required>
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Tahun Pengadaan</label>
-        <input type="number" name="tahun" class="form-control" min="1990"
-               value="<?= $tahun ?: '' ?>" required>
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Merek / Pabrikan</label>
-        <input type="text" name="merek" class="form-control"
-               value="<?= htmlspecialchars($merek) ?>" required>
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Lokasi / Ruangan</label>
-        <select name="lokasi" class="form-select" required>
-          <option value="">-- Pilih --</option>
-          <?php foreach (LOKASI_ALAT as $l): ?>
-            <option value="<?= $l ?>" <?= $lokasi === $l ? 'selected' : '' ?>><?= $l ?></option>
-          <?php endforeach; ?>
-        </select>
+<div class="row">
+  <div class="col-12 col-lg-8 col-xl-6">
+    <div class="card border-light shadow-sm p-4">
+      <div class="d-flex align-items-center justify-content-between mb-4">
+        <h5 class="card-title fw-bold mb-0">
+          <i class="bi bi-pencil-square me-2 text-primary"></i>Ubah Data Alat
+        </h5>
+        <span class="badge-table info">#ALT-<?= str_pad($id, 4, '0', STR_PAD_LEFT) ?></span>
       </div>
 
-      <button type="submit" name="update" class="btn btn-primary">Update</button>
-      <a href="index.php" class="btn btn-outline-secondary">Batal</a>
-    </form>
+      <form method="POST">
+        <input type="hidden" name="csrf" value="<?= csrf_token() ?>">
+
+        <div class="mb-3">
+          <label class="form-label-custom">Nama Alat Medis <span class="text-danger">*</span></label>
+          <input type="text" name="nama_alat" class="form-control-custom"
+                 value="<?= htmlspecialchars($nama) ?>" required autofocus>
+        </div>
+
+        <div class="row g-3 mb-3">
+          <div class="col-md-6">
+            <label class="form-label-custom">Tahun Pengadaan <span class="text-danger">*</span></label>
+            <input type="number" name="tahun" class="form-control-custom" min="1990" max="<?= (int)date('Y') + 1 ?>"
+                   value="<?= $tahun ?: '' ?>" required>
+          </div>
+          <div class="col-md-6">
+            <label class="form-label-custom">Merek / Pabrikan <span class="text-danger">*</span></label>
+            <input type="text" name="merek" class="form-control-custom"
+                   value="<?= htmlspecialchars($merek) ?>" required>
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label class="form-label-custom">Lokasi / Ruangan Penempatan <span class="text-danger">*</span></label>
+          <select name="lokasi" class="form-select-custom" required>
+            <option value="">-- Pilih Lokasi Ruangan --</option>
+            <?php foreach (LOKASI_ALAT as $l): ?>
+              <option value="<?= $l ?>" <?= $lokasi === $l ? 'selected' : '' ?>><?= $l ?></option>
+            <?php endforeach; ?>
+          </select>
+        </div>
+
+        <div class="d-flex align-items-center gap-2 pt-2">
+          <button type="submit" name="update" class="btn-custom btn-custom-primary">
+            <i class="bi bi-check-lg me-1"></i> Perbarui Data
+          </button>
+          <a href="index.php" class="btn-custom btn-custom-outline-secondary text-decoration-none">
+            <i class="bi bi-arrow-left me-1"></i> Batal
+          </a>
+        </div>
+      </form>
+    </div>
   </div>
 </div>
 

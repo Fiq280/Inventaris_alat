@@ -9,8 +9,8 @@ if (isset($_SESSION['user_id'])) {
 $error = "";
 
 if (isset($_POST['login'])) {
-    $username = trim($_POST['username']);
-    $password = $_POST['password'];
+    $username = trim($_POST['username'] ?? '');
+    $password = $_POST['password'] ?? '';
 
     $stmt = mysqli_prepare($koneksi, "SELECT * FROM users WHERE username=?");
     mysqli_stmt_bind_param($stmt, "s", $username);
@@ -60,38 +60,121 @@ if (isset($_POST['login'])) {
 <html lang="id">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Login - Inventory Alat</title>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-  <style>
-    body { background: #eaf4fb; }
-    .kartu-login { max-width: 400px; margin: 10vh auto; border: 0; border-radius: 16px; }
-    .btn-sky { background: #4aa3df; color: #fff; }
-    .btn-sky:hover { background: #3a8fc9; color: #fff; }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sign In - SIMRS Inventaris Alat</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="assets/images/favicon.ico">
+
+  <!-- Local Third-Party Libraries (100% Offline Compatible) -->
+  <link rel="stylesheet" href="assets/libs/bootstrap/css/bootstrap.min.css">
+  <link rel="stylesheet" href="assets/libs/bootstrap-icons/bootstrap-icons.css">
+
+  <!-- Main Design System & Custom Stylesheet -->
+  <link rel="stylesheet" href="assets/css/main.css">
 </head>
 <body>
-  <div class="card kartu-login shadow">
-    <div class="card-body p-4">
-      <h4 class="text-center mb-1">Inventory Alat Medis</h4>
-      <p class="text-center text-muted mb-4">Silakan login</p>
 
-      <?php if ($error): ?>
-        <div class="alert alert-danger py-2"><?= htmlspecialchars($error) ?></div>
+  <!-- ==========================================
+       START: Authentication Container & Login Card
+       ========================================== -->
+  <div class="login-wrapper">
+    <!-- Glowing background shapes for modern visual appearance -->
+    <div class="login-bg-shape login-bg-shape-1"></div>
+    <div class="login-bg-shape login-bg-shape-2"></div>
+
+    <!-- Main centered login card -->
+    <div class="login-card">
+
+      <!-- Brand Identity -->
+      <a href="login.php" class="login-brand text-decoration-none">
+        <i class="bi bi-heart-pulse-fill"></i>
+        <span>Inventaris RS</span>
+      </a>
+
+      <p class="login-subtitle">Masuk ke sistem manajemen inventaris alat medis</p>
+
+      <!-- Pesan Sukses (e.g. Setelah Registrasi) -->
+      <?php if (!empty($_SESSION['pesan_sukses'])): ?>
+        <div class="alert-custom alert-custom-success mb-4">
+          <i class="bi bi-check-circle-fill alert-custom-icon"></i>
+          <div class="alert-custom-content">
+            <?= htmlspecialchars($_SESSION['pesan_sukses']) ?>
+          </div>
+          <button class="alert-custom-close" type="button" aria-label="Tutup" onclick="this.parentElement.remove();">
+            <i class="bi bi-x-lg"></i>
+          </button>
+        </div>
+        <?php unset($_SESSION['pesan_sukses']); ?>
       <?php endif; ?>
 
-      <form method="POST">
-        <div class="mb-3">
-          <label class="form-label">Username</label>
-          <input type="text" name="username" class="form-control" required autofocus>
+      <!-- Pesan Error -->
+      <?php if (!empty($error)): ?>
+        <div class="alert-custom alert-custom-danger mb-4">
+          <i class="bi bi-exclamation-circle-fill alert-custom-icon"></i>
+          <div class="alert-custom-content">
+            <?= htmlspecialchars($error) ?>
+          </div>
+          <button class="alert-custom-close" type="button" aria-label="Tutup" onclick="this.parentElement.remove();">
+            <i class="bi bi-x-lg"></i>
+          </button>
         </div>
-        <div class="mb-3">
-          <label class="form-label">Password</label>
-          <input type="password" name="password" class="form-control" required>
+      <?php endif; ?>
+
+      <!-- Login Form -->
+      <form method="POST" id="loginForm" class="needs-validation">
+
+        <!-- Username Input Group -->
+        <div class="login-form-group">
+          <label for="username" class="login-form-label">Username</label>
+          <div class="login-input-group">
+            <i class="bi bi-person input-icon"></i>
+            <input type="text" id="username" name="username" class="login-input"
+                   placeholder="Masukkan username" required autofocus
+                   value="<?= htmlspecialchars($_POST['username'] ?? '') ?>">
+          </div>
         </div>
-        <button type="submit" name="login" class="btn btn-sky w-100">Masuk</button>
+
+        <!-- Password Input Group -->
+        <div class="login-form-group">
+          <label for="password" class="login-form-label">Password</label>
+          <div class="login-input-group">
+            <i class="bi bi-shield-lock input-icon"></i>
+            <input type="password" id="password" name="password" class="login-input login-input-password"
+                   placeholder="••••••••" required>
+            <button type="button" class="password-toggle-btn" id="toggle-password" aria-label="Tampilkan password">
+              <i class="bi bi-eye"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" name="login" class="btn-login" id="btn-submit">
+          <span>Masuk (Sign In)</span>
+          <i class="bi bi-arrow-right"></i>
+        </button>
+
       </form>
+
+      <!-- Navigasi Register -->
+      <div class="mt-4 pt-3 border-top text-center">
+        <p class="text-muted small mb-0">
+          Belum memiliki akun? <a href="register.php" class="text-success fw-bold text-decoration-none">Daftar Akun Baru (Register)</a>
+        </p>
+      </div>
+
+      <div class="mt-3 text-center">
+        <span class="text-muted small">&copy; <?= date('Y') ?> SIMRS Inventaris Alat &bull; Spark Admin Template</span>
+      </div>
+
     </div>
   </div>
+  <!-- END: Authentication Container -->
+
+  <!-- Local Bootstrap bundle -->
+  <script src="assets/libs/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+  <!-- Custom Authentication interactions script (Password toggle) -->
+  <script src="assets/js/auth.js"></script>
 </body>
 </html>
